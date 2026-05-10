@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ОКЕАН — Версия B (без параллакса)</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,100;0,300;0,700;0,900;1,300;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+
+:root{--abyss:#00070f;--deep:#001428;--mid:#002a52;--glow:#00d4ff;--bio:#00ffcc;--foam:#c8eeff;--text:#ddeeff;--warn:#ff4757}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--abyss);color:var(--text);font-family:'Crimson Pro',Georgia,serif;font-size:18px;line-height:1.75;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--abyss)}
+::-webkit-scrollbar-thumb{background:var(--glow);border-radius:3px}
+
+#pb{position:fixed;top:0;left:0;height:3px;background:linear-gradient(to right,var(--bio),var(--glow));z-index:9998;box-shadow:0 0 8px var(--glow)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;justify-content:space-between;align-items:center;padding:1.2rem 3rem;background:linear-gradient(to bottom,rgba(0,7,15,.95),transparent);backdrop-filter:blur(6px)}
+nav .logo{font-family:'Fraunces',serif;font-weight:900;font-size:1.1rem;letter-spacing:.25em;color:var(--glow);text-transform:uppercase}
+nav ul{display:flex;gap:2.5rem;list-style:none}
+nav a{color:var(--foam);text-decoration:none;font-size:.95rem;letter-spacing:.1em;opacity:.7}
+nav a:hover{opacity:1;color:var(--glow)}
+
+.hero{position:relative;height:100vh;min-height:700px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:linear-gradient(180deg,#001428 0%,#002a52 30%,#004a8f 55%,#0076c6 70%,#009ad4 80%,#00b8d9 88%,#00e8f0 100%)}
+
+.hstars{position:absolute;inset:0;background-image:
+  radial-gradient(2px 2px at 8% 12%,rgba(200,238,255,.95) 0%,transparent 100%),
+  radial-gradient(1.5px 1.5px at 22% 5%,rgba(200,238,255,.8) 0%,transparent 100%),
+  radial-gradient(1px 1px at 36% 18%,rgba(200,238,255,.7) 0%,transparent 100%),
+  radial-gradient(2px 2px at 50% 8%,rgba(200,238,255,.9) 0%,transparent 100%),
+  radial-gradient(1.5px 1.5px at 64% 14%,rgba(200,238,255,.8) 0%,transparent 100%),
+  radial-gradient(1px 1px at 78% 4%,rgba(200,238,255,.65) 0%,transparent 100%),
+  radial-gradient(2px 2px at 88% 20%,rgba(200,238,255,.85) 0%,transparent 100%),
+  radial-gradient(1px 1px at 15% 30%,rgba(200,238,255,.5) 0%,transparent 100%),
+  radial-gradient(1.5px 1.5px at 42% 35%,rgba(200,238,255,.45) 0%,transparent 100%),
+  radial-gradient(1px 1px at 70% 28%,rgba(200,238,255,.55) 0%,transparent 100%),
+  radial-gradient(1px 1px at 92% 22%,rgba(200,238,255,.5) 0%,transparent 100%)}
+
+.hsun{position:absolute;top:12%;left:50%;transform:translateX(-50%);width:85px;height:85px;border-radius:50%;background:radial-gradient(circle,#fff8e7 0%,#ffd54f 40%,transparent 70%);box-shadow:0 0 70px 35px rgba(255,213,79,.15),0 0 140px 70px rgba(255,213,79,.06)}
+
+.hrays{position:absolute;inset:0;overflow:hidden}
+.hrays::before,.hrays::after{content:'';position:absolute;top:-10%;width:220px;height:140%;transform-origin:top center;filter:blur(22px);background:linear-gradient(to bottom,rgba(255,230,100,.07),transparent 60%)}
+.hrays::before{left:34%;transform:rotate(-14deg)}
+.hrays::after{left:51%;transform:rotate(12deg)}
+
+.sdeco{position:absolute;pointer-events:none}
+
+.hwater{position:absolute;bottom:0;left:0;right:0;height:55%}
+.hwater svg{width:100%;height:100%}
+.hdeep{position:absolute;bottom:0;left:0;right:0;height:45%;background:linear-gradient(to bottom,transparent,var(--deep) 30%,var(--abyss))}
+
+.ghost{position:absolute;font-family:'Fraunces',serif;font-weight:900;line-height:.85;color:transparent;pointer-events:none;white-space:nowrap;user-select:none}
+
+.sblob{position:absolute;inset:-60%;pointer-events:none;z-index:0}
+
+.htxt{position:relative;z-index:10;text-align:center;max-width:900px;padding:0 2rem}
+.eyebrow{font-size:.85rem;letter-spacing:.4em;text-transform:uppercase;color:var(--glow);opacity:.8;margin-bottom:1.5rem}
+.htitle{font-family:'Fraunces',serif;font-weight:900;font-size:clamp(5rem,14vw,12rem);line-height:.85;letter-spacing:-.02em;color:#fff;text-shadow:0 0 100px rgba(0,212,255,.35)}
+.htitle span{display:block;font-style:italic;font-weight:100;font-size:.45em;letter-spacing:.12em;color:var(--foam);opacity:.7;margin-top:.5rem}
+.hsub{margin-top:2.5rem;font-size:1.15rem;font-weight:300;color:var(--foam);opacity:.75;max-width:500px;margin-left:auto;margin-right:auto}
+.hscroll{margin-top:4rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;opacity:.5}
+.hscroll span{font-size:.75rem;letter-spacing:.3em;text-transform:uppercase}
+.sln{width:1px;height:50px;background:linear-gradient(to bottom,var(--glow),transparent)}
+
+section{position:relative;overflow:hidden}
+.si{position:relative;z-index:6;max-width:1100px;margin:0 auto;padding:6rem 3rem}
+.sl{font-size:.75rem;letter-spacing:.5em;text-transform:uppercase;color:var(--glow);margin-bottom:1.5rem;display:flex;align-items:center;gap:1rem}
+.sl::after{content:'';flex:1;max-width:60px;height:1px;background:var(--glow);opacity:.4}
+.stitle{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(2.5rem,5vw,4.5rem);line-height:1.05;margin-bottom:2rem}
+.stitle em{font-style:italic;font-weight:100;color:var(--glow)}
+.sbody{font-size:1.1rem;font-weight:300;color:rgba(221,238,255,.85);max-width:680px;line-height:1.9}
+.sbody p+p{margin-top:1.2em}
+
+.wdiv{position:relative;height:80px;overflow:hidden;z-index:5}
+.wdiv svg{position:absolute;bottom:0;width:100%}
+
+#scale{background:linear-gradient(180deg,var(--abyss) 0%,var(--deep) 100%);min-height:100vh}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2px;margin:4rem 0;border:1px solid rgba(0,212,255,.1)}
+.sc{padding:2.5rem 2rem;background:rgba(0,20,40,.6);border:1px solid rgba(0,212,255,.08);position:relative}
+.sc:hover{background:rgba(0,42,82,.8)}
+.sc::before{content:'';position:absolute;top:0;left:0;width:3px;height:0;background:var(--glow)}
+.sc:hover::before{height:100%}
+.sn{font-family:'Fraunces',serif;font-weight:900;font-size:3rem;line-height:1;color:var(--glow);margin-bottom:.5rem}
+.su{font-size:1rem;opacity:.5;font-weight:300}
+.slbl{font-size:.9rem;font-weight:400;color:var(--foam);opacity:.7;letter-spacing:.05em}
+.sdesc{margin-top:.75rem;font-size:.85rem;color:rgba(200,238,255,.5);line-height:1.5}
+
+#zones{background:var(--deep);min-height:100vh}
+.zl{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;margin-top:4rem}
+@media(max-width:768px){.zl{grid-template-columns:1fr;gap:3rem}}
+.dbar{display:flex;gap:1.5rem}
+.dline{flex-shrink:0;width:2px;background:linear-gradient(to bottom,#00d4ff 0%,#0076c6 20%,#004a8f 40%,#002a52 60%,#001428 80%,#000714 100%)}
+.dzl{display:flex;flex-direction:column;flex:1}
+.zi{padding:1.8rem 0;border-bottom:1px solid rgba(0,212,255,.08);position:relative}
+.zi:first-child{padding-top:0}
+.zdot{position:absolute;left:-1.65rem;top:50%;transform:translateY(-50%);width:10px;height:10px;border-radius:50%;border:2px solid;background:var(--abyss)}
+.zi:first-child .zdot{top:0;transform:none}
+.zname{font-family:'Fraunces',serif;font-weight:700;font-size:1.3rem;margin-bottom:.3rem}
+.zdep{font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;opacity:.5;margin-bottom:.6rem}
+.ztxt{font-size:.95rem;font-weight:300;color:rgba(221,238,255,.7);line-height:1.6}
+.zlife{margin-top:.5rem;font-size:.82rem;letter-spacing:.05em;opacity:.5}
+.z1 .zdot,.z1 .zname{color:#00d4ff;border-color:#00d4ff}
+.z2 .zdot,.z2 .zname{color:#0099cc;border-color:#0099cc}
+.z3 .zdot,.z3 .zname{color:#0066aa;border-color:#0066aa}
+.z4 .zdot,.z4 .zname{color:#004488;border-color:#004488}
+.z5 .zdot,.z5 .zname{color:#002255;border-color:#002255}
+
+#biolum{background:var(--abyss);min-height:90vh}
+.bgrid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:4rem}
+@media(max-width:768px){.bgrid{grid-template-columns:1fr}}
+.bcard{background:rgba(0,255,204,.04);border:1px solid rgba(0,255,204,.12);padding:2.5rem;position:relative}
+.bcard:hover{border-color:rgba(0,255,204,.3);background:rgba(0,255,204,.07)}
+
+.bcard::before{content:'';position:absolute;top:1.5rem;right:1.5rem;width:6px;height:6px;border-radius:50%;background:var(--bio);box-shadow:0 0 8px var(--bio),0 0 20px var(--bio)}
+.bico{font-family:'Fraunces',serif;font-style:italic;font-size:1.1rem;color:var(--bio);opacity:.5;margin-bottom:1rem;letter-spacing:.1em}
+.bcard h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.4rem;color:var(--bio);margin-bottom:.8rem}
+.bcard p{font-size:.98rem;color:rgba(221,238,255,.75);line-height:1.75}
+.bbig{margin-top:4rem;padding:3rem;background:linear-gradient(135deg,rgba(0,255,204,.05) 0%,rgba(0,100,200,.08) 100%);border-left:3px solid var(--bio);display:flex;align-items:center;gap:3rem}
+.bbign{font-family:'Fraunces',serif;font-weight:900;font-size:5rem;line-height:1;color:var(--bio);flex-shrink:0;text-shadow:0 0 30px rgba(0,255,204,.4)}
+.bbigt{font-size:1.1rem;line-height:1.75;color:rgba(221,238,255,.8)}
+
+#threats{background:linear-gradient(180deg,var(--abyss) 0%,#0a0010 100%);min-height:100vh}
+.tlay{margin-top:4rem}
+.trow{display:grid;grid-template-columns:140px 1fr;gap:3rem;padding:3rem 0;border-bottom:1px solid rgba(255,71,87,.08);align-items:start;position:relative}
+.trow:hover{background:rgba(255,71,87,.02)}
+.tnum{font-family:'Fraunces',serif;font-weight:900;font-size:3.5rem;line-height:1;color:var(--warn);opacity:.6;text-align:right;padding-top:.2rem}
+.tnum sup{font-size:.4em;font-weight:300;opacity:.7}
+.tcnt h3{font-family:'Fraunces',serif;font-weight:700;font-size:1.8rem;color:rgba(255,100,80,.9);margin-bottom:.8rem}
+.tcnt p{font-size:1rem;color:rgba(221,238,255,.7);line-height:1.8;max-width:600px}
+.ttag{display:inline-block;margin-top:1rem;padding:.3rem .9rem;border:1px solid rgba(255,71,87,.3);border-radius:2px;font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--warn);opacity:.7}
+
+#climate{background:linear-gradient(180deg,var(--mid) 0%,var(--deep) 100%);min-height:80vh}
+.ccols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem;margin-top:4rem}
+@media(max-width:768px){.ccols{grid-template-columns:1fr}}
+.ccard{padding:2.5rem 2rem;background:rgba(0,42,82,.5);border-top:2px solid var(--glow)}
+.cpct{font-family:'Fraunces',serif;font-weight:900;font-size:4rem;line-height:1;color:var(--glow);margin-bottom:.8rem;text-shadow:0 0 20px rgba(0,212,255,.3)}
+.ccard h3{font-family:'Fraunces',serif;font-size:1.25rem;font-weight:700;margin-bottom:.8rem;color:var(--foam)}
+.ccard p{font-size:.95rem;color:rgba(221,238,255,.65);line-height:1.7}
+.ctwin{margin-top:4rem;padding:3rem;background:rgba(0,42,82,.4);border:1px solid rgba(0,212,255,.1);display:grid;grid-template-columns:1fr 1fr;gap:3rem}
+@media(max-width:768px){.ctwin{grid-template-columns:1fr}}
+
+#conclusion{background:var(--abyss);min-height:60vh;display:flex;align-items:center}
+.cinr{text-align:center;max-width:750px;margin:0 auto;padding:8rem 3rem;position:relative;z-index:6}
+.cinr blockquote{font-family:'Fraunces',serif;font-style:italic;font-weight:100;font-size:clamp(1.8rem,4vw,3rem);line-height:1.4;color:var(--foam);padding:0 3rem;position:relative}
+.cinr blockquote::before{content:'"';position:absolute;font-size:8rem;line-height:0;opacity:.05;top:4rem;left:0}
+.cinr blockquote::after{content:'"';position:absolute;font-size:8rem;line-height:0;opacity:.05;bottom:-2rem;right:0}
+.cinr cite{display:block;margin-top:2rem;font-size:.85rem;letter-spacing:.25em;text-transform:uppercase;opacity:.4;font-style:normal}
+.cstats{margin-top:4rem;display:flex;justify-content:center;gap:3rem;flex-wrap:wrap}
+.cst{text-align:center;opacity:.5}
+.cst strong{display:block;font-family:'Fraunces',serif;font-size:2rem;font-weight:900;color:var(--glow)}
+.cst span{font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;margin-top:.3rem;display:block}
+</style>
+</head>
+<body>
+<div id="pb"></div>
+
+<nav>
+  <div class="logo">Океан</div>
+  <ul>
+    <li><a href="#scale">Масштаб</a></li>
+    <li><a href="#zones">Зоны</a></li>
+    <li><a href="#biolum">Биолюминесценция</a></li>
+    <li><a href="#threats">Угрозы</a></li>
+    <li><a href="#climate">Климат</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="hstars"></div>
+  <div class="hsun"></div>
+  <div class="hrays"></div>
+
+  <div class="sdeco" style="bottom:35%;right:6%;opacity:.16;">
+    <svg width="68" height="104" viewBox="0 0 68 104" fill="none">
+      <ellipse cx="34" cy="32" rx="31" ry="24" fill="rgba(0,180,220,.55)"/>
+      <ellipse cx="34" cy="27" rx="19" ry="13" fill="rgba(120,230,255,.15)"/>
+      <path d="M16 53 Q14 73 11 98" stroke="rgba(0,180,220,.35)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M25 56 Q24 76 23 101" stroke="rgba(0,180,220,.25)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M34 57 Q34 77 34 102" stroke="rgba(0,180,220,.4)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M43 56 Q44 76 45 101" stroke="rgba(0,180,220,.25)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M52 53 Q54 73 57 98" stroke="rgba(0,180,220,.35)" stroke-width="2" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div class="sdeco" style="bottom:22%;right:15%;opacity:.18;">
+    <svg width="290" height="108" viewBox="0 0 290 108" fill="none">
+      <ellipse cx="135" cy="54" rx="124" ry="31" fill="rgba(0,20,50,.9)"/>
+      <path d="M259 54 C274 33,285 23,280 54 C285 85,274 75,259 54Z" fill="rgba(0,20,50,.9)"/>
+      <path d="M82 37 C93 21,113 19,103 37Z" fill="rgba(0,20,50,.7)"/>
+      <circle cx="250" cy="48" r="3.5" fill="rgba(0,60,110,.6)"/>
+    </svg>
+  </div>
+
+  <div class="sdeco" style="bottom:24%;left:4%;opacity:.24;">
+    <svg width="108" height="162" viewBox="0 0 108 162" fill="none">
+      <ellipse cx="54" cy="50" rx="50" ry="38" fill="rgba(0,212,255,.55)"/>
+      <ellipse cx="54" cy="43" rx="30" ry="22" fill="rgba(150,240,255,.18)"/>
+      <path d="M26 82 Q23 116 19 152" stroke="rgba(0,212,255,.42)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M38 86 Q36 120 34 156" stroke="rgba(0,212,255,.3)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M54 88 Q54 122 54 158" stroke="rgba(0,212,255,.48)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M70 86 Q72 120 74 156" stroke="rgba(0,212,255,.3)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M82 82 Q85 116 89 152" stroke="rgba(0,212,255,.42)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div class="sdeco" style="bottom:30%;left:14%;opacity:.18;">
+    <svg width="62" height="32" viewBox="0 0 62 32" fill="none">
+      <ellipse cx="25" cy="16" rx="22" ry="10" fill="rgba(0,190,255,1)"/>
+      <path d="M3 16 C-5 8,-8 5,-5 16 C-8 27,-5 24,3 16Z" fill="rgba(0,190,255,1)"/>
+      <path d="M34 10 C42 5,48 3,44 10Z" fill="rgba(0,190,255,.75)"/>
+    </svg>
+  </div>
+
+  <div class="hwater">
+    <svg viewBox="0 0 1200 300" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+      <defs>
+        <linearGradient id="wg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#009ad4" stop-opacity=".9"/>
+          <stop offset="40%" stop-color="#004a8f" stop-opacity=".95"/>
+          <stop offset="100%" stop-color="#001428"/>
+        </linearGradient>
+      </defs>
+      <path d="M0,90 C200,35 400,145 600,85 C800,25 1000,115 1200,90 L1200,300 L0,300 Z" fill="url(#wg)" opacity=".8"/>
+      <path d="M0,108 C200,68 400,138 600,96 C800,54 1000,118 1200,96 L1200,300 L0,300 Z" fill="#0076c6" opacity=".5"/>
+      <path d="M0,118 C200,88 400,128 600,108 C800,88 1000,122 1200,108 L1200,300 L0,300 Z" fill="#002a52" opacity=".9"/>
+    </svg>
+  </div>
+  <div class="hdeep"></div>
+
+  <div class="htxt">
+    <div class="eyebrow">Мировой Океан · Документальное исследование</div>
+    <h1 class="htitle">ОКЕАН<span>Бездна живая</span></h1>
+    <p class="hsub">Семьдесят один процент поверхности Земли скрыт под водой — и большая его часть до сих пор не исследована</p>
+    <div class="hscroll"><span>Погружайтесь</span><div class="sln"></div></div>
+  </div>
+</div>
+
+<section id="scale">
+  <!-- Static background blobs — same positions, no movement -->
+  <div class="sblob" style="background:radial-gradient(ellipse 70% 50% at 55% 50%,rgba(0,50,130,.28) 0%,transparent 60%),radial-gradient(ellipse 55% 40% at 75% 30%,rgba(0,118,198,.18) 0%,transparent 70%),radial-gradient(ellipse 40% 55% at 22% 70%,rgba(0,212,255,.09) 0%,transparent 70%)"></div>
+  <!-- Static ghost "361" — same position as parallax version, but frozen -->
+  <div class="ghost" style="-webkit-text-stroke:2px rgba(0,212,255,.15);font-size:40vw;top:-10%;left:-4%;z-index:2;">361</div>
+  <!-- Static fish school -->
+  <div class="sdeco" style="top:20%;right:-4%;opacity:.15;z-index:5;">
+    <svg width="230" height="152" viewBox="0 0 230 152" fill="none">
+      <ellipse cx="25" cy="36" rx="21" ry="9" fill="rgba(0,180,255,1)" transform="rotate(-5 25 36)"/>
+      <path d="M4 36 C-4 29,-6 27,-4 36 C-6 45,-4 43,4 36Z" fill="rgba(0,180,255,1)"/>
+      <ellipse cx="68" cy="21" rx="18" ry="7.5" fill="rgba(0,180,255,1)" transform="rotate(-10 68 21)"/>
+      <path d="M50 21 C44 15,42 13,44 21 C42 29,44 27,50 21Z" fill="rgba(0,180,255,1)"/>
+      <ellipse cx="58" cy="62" rx="15" ry="6.5" fill="rgba(0,150,220,1)" transform="rotate(8 58 62)"/>
+      <path d="M43 62 C37 56,35 54,37 62 C35 70,37 68,43 62Z" fill="rgba(0,150,220,1)"/>
+      <ellipse cx="112" cy="42" rx="21" ry="9" fill="rgba(0,200,255,1)" transform="rotate(-4 112 42)"/>
+      <path d="M91 42 C84 35,82 33,84 42 C82 51,84 49,91 42Z" fill="rgba(0,200,255,1)"/>
+      <ellipse cx="162" cy="29" rx="19" ry="8" fill="rgba(0,180,255,1)" transform="rotate(-8 162 29)"/>
+      <path d="M143 29 C136 22,134 20,136 29 C134 38,136 36,143 29Z" fill="rgba(0,180,255,1)"/>
+      <ellipse cx="206" cy="48" rx="20" ry="8.5" fill="rgba(0,190,250,1)" transform="rotate(-6 206 48)"/>
+      <path d="M186 48 C179 41,177 39,179 48 C177 57,179 55,186 48Z" fill="rgba(0,190,250,1)"/>
+    </svg>
+  </div>
+  <!-- Static rings -->
+  <div class="sdeco" style="bottom:2%;left:-12%;opacity:.07;z-index:1;">
+    <svg width="520" height="520" viewBox="0 0 520 520" fill="none">
+      <circle cx="260" cy="260" r="250" stroke="rgba(0,212,255,1)" stroke-width="1"/>
+      <circle cx="260" cy="260" r="190" stroke="rgba(0,212,255,1)" stroke-width=".7"/>
+      <circle cx="260" cy="260" r="130" stroke="rgba(0,212,255,1)" stroke-width=".5"/>
+    </svg>
+  </div>
+
+  <div class="si">
+    <div class="sl">01 — Масштаб</div>
+    <h2 class="stitle">Цифры, которые<br><em>трудно осознать</em></h2>
+    <div class="sbody">
+      <p>Мировой океан — единая взаимосвязанная водная система, охватывающая Тихий, Атлантический, Индийский, Северный Ледовитый и Южный океаны. Несмотря на разные названия, все они составляют один непрерывный массив воды.</p>
+      <p>Если бы Земля была размером с яблоко, толщина всего мирового океана была бы тоньше кожуры этого яблока.</p>
+    </div>
+    <div class="stats-grid">
+      <div class="sc"><div class="sn">361<span class="su"> млн</span></div><div class="slbl">км² — площадь Мирового океана</div><div class="sdesc">Это 71% всей поверхности Земли — больше, чем все материки вместе взятые</div></div>
+      <div class="sc"><div class="sn">3 682<span class="su"> м</span></div><div class="slbl">средняя глубина</div><div class="sdesc">Если бы суша была плоской, вся планета была бы покрыта океаном глубиной 2,7 км</div></div>
+      <div class="sc"><div class="sn">11 034<span class="su"> м</span></div><div class="slbl">Марианская впадина — максимальная глубина</div><div class="sdesc">Если поставить Эверест на дно, его вершина не достигнет поверхности воды</div></div>
+      <div class="sc"><div class="sn">97<span class="su"> %</span></div><div class="slbl">всей воды на Земле</div><div class="sdesc">Оставшиеся 3% — ледники, подземные воды и реки. Пресной, доступной воды — менее 1%</div></div>
+    </div>
+  </div>
+</section>
+
+<div class="wdiv" style="background:#001428">
+  <svg viewBox="0 0 1200 80" preserveAspectRatio="none" height="80">
+    <path d="M0,40 C200,80 400,0 600,40 C800,80 1000,10 1200,40 L1200,80 L0,80 Z" fill="#002a52"/>
+  </svg>
+</div>
+
+<section id="zones">
+  <div class="sblob" style="background:radial-gradient(ellipse 65% 65% at 35% 55%,rgba(0,70,160,.25) 0%,transparent 62%),radial-gradient(ellipse 75% 50% at 50% 100%,rgba(0,100,180,.18) 0%,transparent 70%)"></div>
+  <!-- Static ghost depth number -->
+  <div class="ghost" style="-webkit-text-stroke:2px rgba(0,212,255,.13);font-size:30vw;bottom:-16%;left:-3%;z-index:2;">11 034</div>
+  <!-- Static jellyfish (same positions as parallax) -->
+  <div class="sdeco" style="top:3%;right:0%;opacity:.21;z-index:5;">
+    <svg width="138" height="207" viewBox="0 0 138 207" fill="none">
+      <ellipse cx="69" cy="64" rx="64" ry="50" fill="rgba(0,150,220,.6)"/>
+      <ellipse cx="69" cy="56" rx="40" ry="28" fill="rgba(150,230,255,.15)"/>
+      <path d="M35 108 Q30 152 24 198" stroke="rgba(0,150,220,.45)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M50 114 Q47 158 44 202" stroke="rgba(0,150,220,.3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M69 117 Q69 161 69 205" stroke="rgba(0,150,220,.5)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M88 114 Q91 158 94 202" stroke="rgba(0,150,220,.3)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M103 108 Q108 152 114 198" stroke="rgba(0,150,220,.45)" stroke-width="3" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="sdeco" style="bottom:0%;left:-2%;opacity:.10;z-index:1;">
+    <svg width="188" height="282" viewBox="0 0 188 282" fill="none">
+      <ellipse cx="94" cy="83" rx="86" ry="66" fill="rgba(0,55,130,.75)"/>
+      <path d="M38 143 Q33 198 26 256" stroke="rgba(0,55,130,.55)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M62 151 Q60 206 57 264" stroke="rgba(0,55,130,.38)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M94 154 Q94 209 94 268" stroke="rgba(0,55,130,.6)" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M126 151 Q128 206 131 264" stroke="rgba(0,55,130,.38)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M150 143 Q155 198 162 256" stroke="rgba(0,55,130,.55)" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <div class="si">
+    <div class="sl">02 — Зоны глубин</div>
+    <h2 class="stitle">Пять миров<br><em>внутри одного</em></h2>
+    <div class="zl">
+      <div>
+        <div class="dbar">
+          <div class="dline"></div>
+          <div class="dzl">
+            <div class="zi z1"><div class="zdot"></div><div class="zname">Эпипелагическая зона</div><div class="zdep">0 — 200 м · Солнечная зона</div><div class="ztxt">Сюда проникает достаточно солнечного света для фотосинтеза. Здесь обитает большинство известных морских существ: дельфины, акулы, тунцы, кораллы. Температура воды — от +4°C до +36°C.</div><div class="zlife">Дельфины · Акулы · Кораллы · Рыбы</div></div>
+            <div class="zi z2"><div class="zdot"></div><div class="zname">Мезопелагическая зона</div><div class="zdep">200 — 1 000 м · Сумеречная зона</div><div class="ztxt">Свет здесь едва различим — недостаточно для фотосинтеза. Многие обитатели мигрируют ночью к поверхности в поисках пищи, возвращаясь на глубину до рассвета. Давление в 100 раз превышает атмосферное.</div><div class="zlife">Кальмары · Рыба-удильщик · Светлячковые рыбы</div></div>
+            <div class="zi z3"><div class="zdot"></div><div class="zname">Батипелагическая зона</div><div class="zdep">1 000 — 4 000 м · Полночная зона</div><div class="ztxt">Полная тьма и температура около 4°C. Давление достигает 400 атмосфер. Жизнь здесь разреженная, но удивительная: рыба-гадюка, гигантский кальмар, медузы с собственным светом.</div><div class="zlife">Гигантский кальмар · Рыба-гадюка · Медузы</div></div>
+            <div class="zi z4"><div class="zdot"></div><div class="zname">Абиссопелагическая зона</div><div class="zdep">4 000 — 6 000 м · Абиссальная зона</div><div class="ztxt">Плоские абиссальные равнины — самые обширные экосистемы Земли. Практически нет пищи, кроме «морского снега» — органических частиц, медленно опускающихся сверху. Давление — 600 атмосфер.</div><div class="zlife">Морские огурцы · Голотурии · Изоподы</div></div>
+            <div class="zi z5"><div class="zdot"></div><div class="zname">Хадальная зона</div><div class="zdep">&gt; 6 000 м · Зона впадин</div><div class="ztxt">Только в глубоководных желобах — Марианском, Тонганском, Филиппинском. Давление более 1 000 атмосфер. До 2020 года было совершено меньше погружений на дно Марианской впадины, чем полётов на Луну.</div><div class="zlife">Снайлфиш · Амфиподы · Бактерии-экстремофилы</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="padding-top:1rem">
+        <div class="sbody">
+          <p>Чем глубже — тем меньше мы знаем. К 2023 году человечество картировало лишь около <strong style="color:var(--glow)">25%</strong> морского дна с высоким разрешением. Это означает, что мы знаем поверхность Луны и Марса лучше, чем дно собственного океана.</p>
+          <p>Каждая экспедиция в глубины открывает новые виды. По оценкам учёных, в океане обитает от <strong style="color:var(--glow)">500 000 до 10 000 000</strong> видов живых существ — большинство из которых ещё не описаны наукой.</p>
+          <p>Глубоководные экосистемы существуют полностью независимо от солнечного света: вокруг гидротермальных источников жизнь питается химической энергией из недр Земли — хемосинтезом. Это открытие в корне изменило представления о возможности жизни на других планетах.</p>
+        </div>
+        <div style="margin-top:3rem;padding:2rem;border:1px solid rgba(0,212,255,.15);background:rgba(0,20,40,.4)">
+          <div class="sl" style="margin-bottom:1rem">Факт для размышления</div>
+          <p style="font-family:'Fraunces',serif;font-style:italic;font-size:1.3rem;line-height:1.5;color:var(--foam);font-weight:300">«Морской снег» падает с поверхности на дно около <strong style="font-style:normal;color:var(--glow)">1 000 лет</strong>, прежде чем достигнет абиссальных равнин.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="wdiv" style="background:#002a52">
+  <svg viewBox="0 0 1200 80" preserveAspectRatio="none" height="80">
+    <path d="M0,20 C300,70 600,0 900,60 C1050,80 1150,30 1200,20 L1200,80 L0,80 Z" fill="#00070f"/>
+  </svg>
+</div>
+
+<section id="biolum">
+  <div class="sblob" style="background:radial-gradient(ellipse 60% 60% at 50% 45%,rgba(0,110,90,.22) 0%,transparent 65%),radial-gradient(ellipse 35% 35% at 15% 55%,rgba(0,255,204,.10) 0%,transparent 70%),radial-gradient(ellipse 25% 40% at 82% 30%,rgba(0,255,204,.08) 0%,transparent 70%)"></div>
+  <div class="ghost" style="-webkit-text-stroke:2px rgba(0,255,204,.12);font-size:48vw;top:-8%;left:-9%;z-index:2;">76</div>
+  <div class="sdeco" style="top:12%;right:-1%;opacity:.18;z-index:5;">
+    <svg width="120" height="264" viewBox="0 0 120 264" fill="none">
+      <ellipse cx="60" cy="94" rx="30" ry="82" fill="rgba(0,255,180,.55)"/>
+      <ellipse cx="60" cy="40" rx="22" ry="30" fill="rgba(0,255,180,.65)"/>
+      <circle cx="48" cy="30" r="5" fill="rgba(200,255,240,.75)"/>
+      <circle cx="72" cy="30" r="5" fill="rgba(200,255,240,.75)"/>
+      <path d="M32 168 Q16 212 8 256" stroke="rgba(0,255,180,.45)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M42 174 Q34 218 30 260" stroke="rgba(0,255,180,.32)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M52 177 Q50 221 49 262" stroke="rgba(0,255,180,.38)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M60 178 Q60 222 60 263" stroke="rgba(0,255,180,.5)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M68 177 Q70 221 71 262" stroke="rgba(0,255,180,.38)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M78 174 Q86 218 90 260" stroke="rgba(0,255,180,.32)" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <path d="M88 168 Q104 212 112 256" stroke="rgba(0,255,180,.45)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </svg>
+  </div>
+  <div class="sdeco" style="bottom:8%;left:-2%;z-index:1;">
+    <div style="width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(0,255,180,.12) 0%,transparent 70%);filter:blur(45px)"></div>
+  </div>
+  <div class="sdeco" style="top:5%;left:18%;z-index:1;">
+    <div style="width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(0,200,255,.10) 0%,transparent 70%);filter:blur(28px)"></div>
+  </div>
+
+  <div class="si">
+    <div class="sl">03 — Биолюминесценция</div>
+    <h2 class="stitle">Океан,<br><em>который светится</em></h2>
+    <div class="sbody"><p>Биолюминесценция — способность живых организмов производить и излучать свет — в океане встречается несравнимо чаще, чем на суше. </p></div>
+    <div class="bbig">
+      <div class="bbign">76%</div>
+      <div class="bbigt">морских существ, обитающих глубже 200 метров, способны производить собственный свет. В абсолютной темноте биолюминесценция стала универсальным языком океана — для охоты, защиты и общения.</div>
+    </div>
+    <div class="bgrid" style="margin-top:3rem">
+      <div class="bcard"><div class="bico">I.</div><h3>Охота в темноте</h3><p>Рыба-удильщик использует светящийся «фонарь» на голове как приманку. Жертвы, привлечённые светом, оказываются прямо перед пастью хищника. Длинные клыки не дают добыче вырваться даже если она крупнее охотника.</p></div>
+      <div class="bcard"><div class="bico">II.</div><h3>Защита контратакой</h3><p>Некоторые кальмары при опасности выпускают облако светящихся чернил вместо тёмных — ослепляют хищника и дезориентируют его. Другие виды «отстреливают» светящиеся шарики, отвлекая внимание.</p></div>
+      <div class="bcard"><div class="bico">III.</div><h3>Язык света</h3><p>Светлячковые кальмары используют сложные паттерны вспышек для коммуникации между особями. Каждый вид имеет уникальную «подпись» свечения, узнаваемую другими представителями того же вида.</p></div>
+      <div class="bcard"><div class="bico">IV.</div><h3>Морские огни</h3><p>Динофлагелляты — одноклеточные водоросли — иногда собираются в таких количествах, что заставляют волны светиться голубым. Это явление, известное как «море огней», наблюдалось мореплавателями тысячи лет и долгое время считалось мистическим.</p></div>
+    </div>
+  </div>
+</section>
+
+<div class="wdiv" style="background:#00070f">
+  <svg viewBox="0 0 1200 80" preserveAspectRatio="none" height="80">
+    <path d="M0,60 C200,10 500,80 800,20 C1000,0 1100,50 1200,60 L1200,80 L0,80 Z" fill="#0a0010"/>
+  </svg>
+</div>
+
+<section id="threats">
+  <div class="sblob" style="background:radial-gradient(ellipse 60% 55% at 50% 50%,rgba(110,15,25,.22) 0%,transparent 65%),radial-gradient(ellipse 45% 45% at 18% 50%,rgba(255,71,87,.06) 0%,transparent 70%)"></div>
+  <div class="ghost" style="-webkit-text-stroke:2px rgba(255,71,87,.13);font-size:28vw;top:-6%;right:-8%;z-index:2;">×90%</div>
+  <div class="sdeco" style="top:18%;right:3%;opacity:.11;z-index:5;">
+    <svg width="96" height="168" viewBox="0 0 96 168" fill="none">
+      <path d="M28 16 Q14 8 12 28 L8 124 Q8 144 28 152 L68 152 Q88 144 88 124 L84 28 Q82 8 68 16Z" fill="rgba(255,71,87,.65)" stroke="rgba(255,71,87,.4)" stroke-width="1.5"/>
+      <path d="M35 16 L35 4 Q48 -8 62 4 L62 16" stroke="rgba(255,71,87,.6)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M20 70 Q48 62 76 70" stroke="rgba(255,255,255,.1)" stroke-width="1" fill="none"/>
+      <path d="M18 100 Q48 92 78 100" stroke="rgba(255,255,255,.08)" stroke-width="1" fill="none"/>
+    </svg>
+  </div>
+  <div class="sdeco" style="bottom:14%;left:2%;opacity:.08;z-index:1;">
+    <svg width="162" height="68" viewBox="0 0 162 68" fill="none">
+      <ellipse cx="72" cy="34" rx="64" ry="25" fill="rgba(75,75,95,.8)"/>
+      <path d="M8 34 C-6 20,-10 15,-7 34 C-10 53,-6 48,8 34Z" fill="rgba(75,75,95,.8)"/>
+      <path d="M94 20 C108 12,118 8,114 20Z" fill="rgba(75,75,95,.6)"/>
+      <circle cx="116" cy="30" r="6" fill="rgba(25,25,45,.9)"/>
+    </svg>
+  </div>
+
+  <div class="si">
+    <div class="sl" style="color:var(--warn)">04 — Угрозы</div>
+    <h2 class="stitle">Что мы<br><em>делаем с океаном</em></h2>
+    <div class="sbody"><p>За последние 200 лет человечество изменило океан сильнее, чем за предыдущие 10 000 лет. Скорость этих изменений продолжает нарастать.</p></div>
+    <div class="tlay">
+      <div class="trow"><div class="tnum">8<sup>млн т</sup></div><div class="tcnt"><h3>Пластик каждый год</h3><p>Ежегодно в океан попадает около 8 миллионов тонн пластика — это эквивалентно одному мусоровозу, опрокидывающемуся в море каждую минуту. К 2050 году, по некоторым прогнозам, масса пластика в океане превысит массу рыбы. Микропластик обнаружен в желудках рыб всех глубин, включая обитателей Марианской впадины.</p><div class="ttag">Загрязнение</div></div></div>
+      <div class="trow"><div class="tnum">26<sup>%</sup></div><div class="tcnt"><h3>Рост кислотности</h3><p>С начала промышленной революции кислотность океана выросла на 26%. Океан поглощает около 30% всего CO₂, производимого человечеством. Это замедляет изменение климата, но растворяет карбонат кальция — строительный материал кораллов, моллюсков и морских ежей. При нынешней скорости к 2100 году кислотность вырастет ещё на 150%.</p><div class="ttag">Закисление</div></div></div>
+      <div class="trow"><div class="tnum">0,13<sup>°C</sup></div><div class="tcnt"><h3>Потепление за десятилетие</h3><p>Температура поверхности океана растёт на 0,13°C каждые 10 лет. Это может звучать незначительно, но влечёт за собой катастрофические последствия: обесцвечивание и гибель коралловых рифов, изменение маршрутов океанских течений, рост мощности ураганов и повышение уровня моря. 2023 год стал рекордным по температуре поверхности океана.</p><div class="ttag">Изменение климата</div></div></div>
+      <div class="trow"><div class="tnum">90<sup>%</sup></div><div class="tcnt"><h3>Крупная рыба исчезла</h3><p>По оценкам учёных, с середины XX века популяции крупных хищных рыб — тунца, акул, меч-рыбы, трески — сократились на 90%. Промышленный рыбный промысел извлекает из океана больше, чем он успевает восстановить. Сегодня 34% мировых рыбных запасов вылавливаются быстрее допустимого уровня.</p><div class="ttag">Перелов</div></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="wdiv" style="background:#0a0010">
+  <svg viewBox="0 0 1200 80" preserveAspectRatio="none" height="80">
+    <path d="M0,40 C300,80 700,0 1000,50 C1100,70 1160,40 1200,40 L1200,80 L0,80 Z" fill="#002a52"/>
+  </svg>
+</div>
+
+<section id="climate">
+  <div class="sblob" style="background:radial-gradient(ellipse 65% 55% at 60% 42%,rgba(0,55,135,.30) 0%,transparent 65%),radial-gradient(ellipse 65% 65% at 72% 40%,rgba(0,118,198,.24) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 20% 70%,rgba(0,212,255,.10) 0%,transparent 70%)"></div>
+  <div class="ghost" style="-webkit-text-stroke:2px rgba(0,212,255,.13);font-size:34vw;bottom:-22%;left:-5%;z-index:2;">90%</div>
+  <!-- Static whale — same position -->
+  <div class="sdeco" style="top:8%;right:1%;opacity:.17;z-index:5;">
+    <svg width="318" height="118" viewBox="0 0 318 118" fill="none">
+      <path d="M12 68 C34 26,96 18,158 22 C218 26,266 44,285 62 C296 74,291 89,274 93 C232 102,122 100,62 90 C30 84,6 82,12 68Z" fill="rgba(0,100,180,.72)"/>
+      <path d="M285 62 C300 47,312 37,309 62 C312 87,300 77,285 62Z" fill="rgba(0,100,180,.72)"/>
+      <path d="M171 21 C181 6,198 3,194 21Z" fill="rgba(0,100,180,.56)"/>
+      <ellipse cx="264" cy="56" r="6.5" fill="rgba(0,50,120,.65)"/>
+      <path d="M196 19 Q200 3 194 -9 Q202 2 208 -5 Q200 8 203 19" fill="rgba(180,230,255,.35)"/>
+    </svg>
+  </div>
+  <div class="sdeco" style="top:43%;left:0;right:0;width:100%;opacity:.10;z-index:1;">
+    <svg width="100%" height="165" viewBox="0 0 1200 165" preserveAspectRatio="none" fill="none">
+      <path d="M0,44 C200,13 400,84 600,44 C800,4 1000,64 1200,44" stroke="rgba(0,212,255,1)" stroke-width="2"/>
+      <path d="M0,76 C200,56 400,106 600,70 C800,34 1000,90 1200,70" stroke="rgba(0,212,255,1)" stroke-width="1.2" opacity=".7"/>
+      <path d="M0,108 C200,88 400,128 600,102 C800,76 1000,116 1200,102" stroke="rgba(0,212,255,1)" stroke-width=".8" opacity=".5"/>
+    </svg>
+  </div>
+
+  <div class="si">
+    <div class="sl">05 — Роль в климате</div>
+    <h2 class="stitle">Океан как<br><em>регулятор жизни</em></h2>
+    <div class="sbody"><p>Без океана Земля была бы безжизненной скалой. Он не просто «хранит воду» — он активно управляет климатом планеты, производит кислород и поглощает углекислый газ в масштабах, которые делают его важнейшей системой жизнеобеспечения Земли.</p></div>
+    <div class="ccols">
+      <div class="ccard"><div class="cpct">90%</div><h3>Тепловой буфер планеты</h3><p>Океан поглощает около 90% избыточного тепла, генерируемого парниковым эффектом. Без него средняя температура Земли была бы примерно на 36°C выше нынешней. Именно этим объясняется, почему потепление на суше происходит в 2–3 раза быстрее, чем в среднем по планете.</p></div>
+      <div class="ccard"><div class="cpct">50%</div><h3>Половина кислорода Земли</h3><p>Фитопланктон — микроскопические водоросли — производит около 50% всего кислорода на Земле. Каждый второй вдох, который вы делаете, обеспечен океаном. Этот же фитопланктон — основа всей морской пищевой цепочки и главный «насос» углерода из атмосферы.</p></div>
+      <div class="ccard"><div class="cpct">30%</div><h3>Углеродный поглотитель</h3><p>Океан ежегодно поглощает около 30% всего антропогенного CO₂. Это критически смягчает скорость изменения климата. Но чем теплее и кислее становится вода, тем хуже океан справляется с этой функцией — создавая опасную обратную связь.</p></div>
+    </div>
+    <div class="ctwin">
+      <div><div class="sl" style="margin-bottom:1rem">Течения — кровеносная система Земли</div><p class="sbody">Глобальный термохалинный конвейер — система океанских течений, которая переносит тепло с экватора к полюсам и обратно. Эта «лента» циркулирует медленно: воде требуется около <strong style="color:var(--glow)">1 000 лет</strong>, чтобы совершить полный круг. Течение Гольфстрим удерживает Западную Европу на 5–10°C теплее, чем должно быть на тех же широтах.</p></div>
+      <div><div class="sl" style="margin-bottom:1rem">Угроза коллапса</div><p class="sbody">Таяние арктических льдов вливает огромные объёмы пресной воды в северную Атлантику. Это замедляет термохалинный конвейер — он уже работает на <strong style="color:var(--warn)">95%</strong> от своей минимальной мощности за последние 1 000 лет. Его ослабление или коллапс означало бы резкое похолодание Европы и радикальное изменение климата на всей планете.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="conclusion">
+  <div class="sblob" style="background:radial-gradient(ellipse 70% 70% at 50% 100%,rgba(0,100,200,.15) 0%,transparent 70%)"></div>
+  <div class="cinr">
+    <blockquote>Мы — существа, вышедшие из океана. Каждая клетка нашего тела содержит раствор, по составу похожий на морскую воду. Мы несём океан внутри себя — и от нас зависит, выживет ли он снаружи.</blockquote>
+    <cite>— Silvia Earle, морской биолог, National Geographic Explorer</cite>
+    <div class="cstats">
+      <div class="cst"><strong>~240 000</strong><span>описанных морских видов</span></div>
+      <div class="cst"><strong>&lt; 25%</strong><span>картировано с высоким разрешением</span></div>
+      <div class="cst"><strong>3,5 млрд</strong><span>лет — возраст первой морской жизни</span></div>
+    </div>
+  </div>
+</section>
+
+<script>
+
+const pb = document.getElementById('pb');
+window.addEventListener('scroll', () => {
+  pb.style.width = (scrollY / (document.documentElement.scrollHeight - innerHeight) * 100) + '%';
+}, { passive: true });
+
+document.querySelectorAll('section[id]').forEach(s =>
+  new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      document.querySelectorAll('nav a[href^="#"]').forEach(l => {
+        const a = l.getAttribute('href') === '#' + e.target.id;
+        l.style.opacity = a ? '1' : '0.7';
+        l.style.color = a ? 'var(--glow)' : '';
+      });
+    });
+  }, { threshold: 0.4 }).observe(s)
+);
+</script>
+</body>
+</html>
